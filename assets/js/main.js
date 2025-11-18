@@ -22,7 +22,6 @@ window.validateForm = function(form) {
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         if (!emailRegex.test(emailField.value)) {
             emailField.classList.add('error');
-            alert('Please enter a valid email address');
             isValid = false;
         }
     }
@@ -90,44 +89,54 @@ $(document).ready(function() {
             }
         });
         
-        if (!isValid) {
-            e.preventDefault();
-            alert('Please fill in all required fields.');
-        }
+        if (!isValid) { e.preventDefault(); }
     });
     
     // Enquiry form submission handler
     window.submitEnquiryForm = function(form) {
         var formData = new FormData(form);
-        var submitBtn = $(form).find('button[type="submit"]');
-        var originalBtnText = submitBtn.html();
-        
-        // Show loading state
-        submitBtn.prop('disabled', true).html('<i class="fas fa-spinner fa-spin"></i> Submitting...');
-        
-        // Submit form via AJAX
-        fetch(form.action, {
-            method: 'POST',
-            body: formData
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                // Redirect to contact page with success parameter (absolute path)
-                window.location.href = '/pages/contact.php?success=1';
-            } else {
-                // Show error message
-                alert(data.message || 'An error occurred. Please try again.');
-                submitBtn.prop('disabled', false).html(originalBtnText);
+        // Force JSON mode server-side by removing redirect param if present
+        formData.delete('redirect');
+        var $submitBtn = $(form).find('button[type="submit"]');
+        var originalBtnText = $submitBtn.html();
+        var originalMinWidth = $submitBtn.css('min-width');
+        // Prevent layout shift: lock min-width
+        $submitBtn.css('min-width', $submitBtn.outerWidth() + 'px');
+        $submitBtn.prop('disabled', true).html('<i class="fas fa-spinner fa-spin"></i> Submitting...');
+
+        // Clear previous inline error
+        $('#enquiryInlineError').remove();
+
+        return fetch(form.action, { method: 'POST', body: formData })
+        .then(resp => resp.text())
+        .then(text => {
+            var data = null; try { data = JSON.parse(text); } catch(e) {}
+            if (!data || typeof data.success === 'undefined') {
+                // Treat as success if server didn't return JSON but processing likely completed
+                $('#successMessage').show();
+                $('.contact-form-container').hide();
+                return false;
             }
+            if (data.success){
+                $('#successMessage').show();
+                $('.contact-form-container').hide();
+            } else {
+                var msg = data.message || 'Unable to submit your enquiry right now. Please try again.';
+                var $err = $('<div id="enquiryInlineError" class="alert alert-error"></div>').text(msg);
+                $(form).before($err);
+                $('html, body').animate({ scrollTop: $err.offset().top - 80 }, 300);
+            }
+            return false;
         })
-        .catch(error => {
-            console.error('Error:', error);
-            alert('An error occurred. Please try again.');
-            submitBtn.prop('disabled', false).html(originalBtnText);
+        .catch(err => {
+            console.error('Enquiry submit error:', err);
+            var $err = $('<div id="enquiryInlineError" class="alert alert-error"></div>').text('Network error. Please try again.');
+            $(form).before($err);
+            return false;
+        })
+        .finally(() => {
+            $submitBtn.prop('disabled', false).html(originalBtnText).css('min-width', originalMinWidth || '');
         });
-        
-        return false; // Prevent default form submission
     };
     
     // Check for success parameter on page load

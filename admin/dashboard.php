@@ -61,6 +61,7 @@ requireAdminLogin();
             <nav class="sidebar-nav">
                 <ul>
                     <li><a href="dashboard.php" class="active"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+                    <li><a href="sliders.php"><i class="fas fa-images"></i> Sliders</a></li>
                     <li><a href="blog-management.php"><i class="fas fa-blog"></i> Blog Management</a></li>
                     <li><a href="service-management.php"><i class="fas fa-concierge-bell"></i> Service Management</a></li>
                     <li><a href="project-management.php"><i class="fas fa-drafting-compass"></i> Project Management</a></li>

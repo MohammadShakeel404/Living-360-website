@@ -51,7 +51,10 @@ $error = isset($_GET['error']) ? 'An error occurred while submitting your enquir
             <h2>Thank You!</h2>
             <p>Your enquiry has been submitted successfully.</p>
             <p class="small">We'll get back to you as soon as possible. A confirmation email has been sent to your inbox.</p>
-            <a href="/pages/contact.php" class="btn btn-primary">Submit Another Enquiry</a>
+            <div style="display:flex; gap:10px; flex-wrap:wrap;">
+                <a href="/pages/contact.php" class="btn btn-primary">Submit Another Enquiry</a>
+                <button type="button" id="submitAnotherInline" class="btn btn-outline">Submit Another Without Reload</button>
+            </div>
         </div>
 
         <div class="contact-form-container">
@@ -73,30 +76,8 @@ $error = isset($_GET['error']) ? 'An error occurred while submitting your enquir
                 <div class="alert alert-error"><?php echo htmlspecialchars($error); ?></div>
             <?php endif; ?>
             
-            <form class="enquiry-form" id="enquiryForm" method="post" action="/api/enquiry.php" onsubmit="if(!validateForm(this)) return false; return submitEnquiryForm(this);">
+            <form class="enquiry-form" id="enquiryForm" method="post" action="/api/enquiry.php" onsubmit="return contactSubmit(this);">
                 <input type="hidden" name="redirect" value="1">
-                <!-- Step 1: Basic Information -->
-                <div class="form-step">
-                    <h3>Basic Information</h3>
-                    <div class="form-group">
-                        <label for="name">Full Name *</label>
-                        <input type="text" id="name" name="name" required>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="email">Email Address *</label>
-                        <input type="email" id="email" name="email" required>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="phone">Phone Number</label>
-                        <input type="tel" id="phone" name="phone">
-                    </div>
-                    
-                    <div class="form-buttons">
-                        <button type="button" class="btn btn-primary next-step">Next</button>
-                    </div>
-                </div>
                 
                 <!-- Step 2: Project Details -->
                 <div class="form-step">
@@ -136,7 +117,6 @@ $error = isset($_GET['error']) ? 'An error occurred while submitting your enquir
                     </div>
                     
                     <div class="form-buttons">
-                        <button type="button" class="btn btn-outline prev-step">Previous</button>
                         <button type="button" class="btn btn-primary next-step">Next</button>
                     </div>
                 </div>
@@ -148,24 +128,24 @@ $error = isset($_GET['error']) ? 'An error occurred while submitting your enquir
                         <label>Budget Range *</label>
                         <div class="radio-group">
                             <label class="radio-option">
-                                <input type="radio" name="budget" value="under-10k" required>
-                                <span>Under ₹10,000</span>
+                                <input type="radio" name="budget" value="under-1L" required>
+                                <span>Under ₹1,00,000</span>
                             </label>
                             <label class="radio-option">
-                                <input type="radio" name="budget" value="10k-25k" required>
-                                <span>₹10,000 - ₹25,000</span>
+                                <input type="radio" name="budget" value="1L-2.5L" required>
+                                <span>₹10,000 - ₹2,50,000</span>
                             </label>
                             <label class="radio-option">
-                                <input type="radio" name="budget" value="25k-50k" required>
-                                <span>₹25,000 - ₹50,000</span>
+                                <input type="radio" name="budget" value="2.5L-5L" required>
+                                <span>₹2,50,000 - ₹5,00,000</span>
                             </label>
                             <label class="radio-option">
-                                <input type="radio" name="budget" value="50k-100k" required>
-                                <span>₹50,000 - ₹100,000</span>
+                                <input type="radio" name="budget" value="5L-10L" required>
+                                <span>₹5,00,000 - ₹10,00,000</span>
                             </label>
                             <label class="radio-option">
-                                <input type="radio" name="budget" value="over-100k" required>
-                                <span>Over ₹100,000</span>
+                                <input type="radio" name="budget" value="over-10L" required>
+                                <span>Over ₹10,00,000</span>
                             </label>
                         </div>
                     </div>
@@ -227,6 +207,30 @@ $error = isset($_GET['error']) ? 'An error occurred while submitting your enquir
                             <input type="checkbox" name="newsletter" value="1">
                             <span>I would like to receive newsletters and updates from Living 360 Interiors</span>
                         </label>
+                    </div>
+                    
+                    <div class="form-buttons">
+                        <button type="button" class="btn btn-outline prev-step">Previous</button>
+                        <button type="button" class="btn btn-primary next-step">Next</button>
+                    </div>
+                </div>
+                
+                <!-- Step 1: Basic Information -->
+                <div class="form-step">
+                    <h3>Basic Information</h3>
+                    <div class="form-group">
+                        <label for="name">Full Name *</label>
+                        <input type="text" id="name" name="name" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="email">Email Address *</label>
+                        <input type="email" id="email" name="email" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="phone">Phone Number</label>
+                        <input type="tel" id="phone" name="phone">
                     </div>
                     
                     <div class="form-buttons">

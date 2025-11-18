@@ -2,17 +2,9 @@
 
 /* Large Devices (Desktops & Laptops) */
 @media (max-width: 1200px) {
-    .container {
-        max-width: 960px;
-    }
-    
-    .section {
-        padding: 70px 0;
-    }
-    
-    .content-area {
-        padding: 30px;
-    }
+    .container { max-width: 960px; }
+    .section { padding: 70px 0; }
+    .content-area { padding: 30px; }
 }
 
 /* Medium Devices (Tablets) */
@@ -44,6 +36,9 @@
     /* Project modal: stack on tablet */
     #projectModal .project-detail { grid-template-columns: 1fr; }
     #projectModal .project-gallery .main-image img { height: 320px; }
+    /* Service modal uses shared .modal selectors */
+    .modal .project-detail { grid-template-columns: 1fr; padding: 16px; }
+    .modal-content { width: 94%; max-width: 860px; }
 }
 
 
@@ -81,6 +76,9 @@
     #projectModal .thumbnail-grid { grid-template-columns: repeat(4, 1fr); gap: 8px; }
     #projectModal .thumbnail-grid img { height: 56px; border-radius: 6px; }
     #projectModal .project-cta .btn { width: 100%; margin-top: 8px; }
+    /* Service modal: tighten padding and reduce image height */
+    .modal .project-detail { padding: 16px; }
+    .modal .project-gallery .main-image img { max-height: 50vh; }
     .offer-container { flex-direction: column; }
     .offer-details { min-width: 100%; }
     .offer-details { padding: 30px 20px; }
@@ -124,9 +122,16 @@
     .bottom-nav { display: flex; }
     
     .chatbot-window {
-        width: calc(100vw - 40px);
+        left: 50%;
+        right: auto;
+        transform: translateX(-50%);
+        width: calc(100vw - 32px);
+        max-width: 420px;
         height: 70vh;
-        right: -20px;
         bottom: 70px;
     }
+    /* Service modal: full-width feel and comfortable image cap */
+    .modal-content { width: 96%; max-width: 520px; }
+    .modal .project-detail { padding: 14px; }
+    .modal .project-gallery .main-image img { max-height: 42vh; }
 }

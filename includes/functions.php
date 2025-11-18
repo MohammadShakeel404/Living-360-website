@@ -283,4 +283,29 @@ function createSlug($text) {
     }
     return $text;
 }
+
+// Get active sliders with safe fallback
+function getActiveSliders() {
+    try {
+        $conn = dbConnect();
+        if (!$conn) { throw new Exception('No DB connection'); }
+        $stmt = $conn->prepare("SELECT id, image, badge, title, subtitle, status, sort_order FROM sliders WHERE status = 1 ORDER BY sort_order ASC, id ASC");
+        $stmt->execute();
+        $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        if ($rows && count($rows) > 0) {
+            return $rows;
+        }
+    } catch (Throwable $e) {
+        error_log('getActiveSliders fallback: ' . $e->getMessage());
+    }
+    return [[
+        'id' => 1,
+        'image' => 'assets/images/about-image.jpg',
+        'badge' => 'Professional Interior Design',
+        'title' => 'Transform Your Space with<br> Living 360 Interiors',
+        'subtitle' => 'We create beautiful, functional spaces that inspire and delight. From residential homes to commercial spaces, we bring your vision to life.',
+        'status' => 1,
+        'sort_order' => 1,
+    ]];
+}
 ?>

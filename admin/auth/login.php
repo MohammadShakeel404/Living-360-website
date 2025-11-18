@@ -4,7 +4,7 @@ require_once '../../includes/functions.php';
 
 // If admin is already logged in, redirect to dashboard
 if (isAdminLoggedIn()) {
-    header('Location: ../../dashboard.php');
+    header('Location: ../dashboard.php');
     exit;
 }
 
@@ -53,33 +53,57 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <link rel="stylesheet" href="../../assets/css/admin.css">
 </head>
 <body class="login-page">
-    <div class="login-container">
-        <div class="login-form">
-            <div class="login-header">
-                <img src="../../assets/images/logo.png" alt="Living 360 Interiors">
-                <h1>Admin Login</h1>
+    <div class="auth-wrap">
+        <div class="auth-card">
+            <div class="auth-left">
+                <img src="../../assets/images/logo.png" alt="Living 360 Interiors" class="brand-mark">
+                <div class="brand-name">Living 360 Interiors</div>
             </div>
-            
-            <?php if (isset($error)): ?>
-                <div class="alert alert-danger"><?php echo $error; ?></div>
-            <?php endif; ?>
-            
-            <form method="post" action="">
-                <div class="form-group">
-                    <label for="username">Username</label>
-                    <input type="text" id="username" name="username" required>
-                </div>
-                
-                <div class="form-group">
-                    <label for="password">Password</label>
-                    <input type="password" id="password" name="password" required>
-                </div>
-                
-                <div class="form-group">
-                    <button type="submit" class="btn btn-primary">Login</button>
-                </div>
-            </form>
+            <div class="auth-divider" aria-hidden="true"></div>
+            <div class="auth-right" role="form" aria-labelledby="adminLoginTitle">
+                <h2 id="adminLoginTitle" class="welcome-title">Welcome</h2>
+                <p class="welcome-sub">Please login to Admin Dashboard.</p>
+
+                <?php if (isset($error)): ?>
+                    <div class="alert alert-danger"><?php echo $error; ?></div>
+                <?php endif; ?>
+
+                <form method="post" action="">
+                    <div class="form-group">
+                        <label for="username">Username</label>
+                        <input type="text" id="username" name="username" required placeholder="Username">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="password">Password</label>
+                        <div class="password-field">
+                            <input type="password" id="password" name="password" required aria-describedby="loginHelp" placeholder="Password">
+                            <button type="button" class="toggle-pass" aria-label="Show password"><i class="fa fa-eye"></i></button>
+                        </div>
+                        <small id="loginHelp" class="form-hint">Use your administrator credentials to sign in.</small>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-primary btn-login">Login</button>
+                        <a href="#" class="forgot-link">Forgotten your password?</a>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
+    <script>
+      (function(){
+        const btn = document.querySelector('.toggle-pass');
+        const input = document.getElementById('password');
+        if(btn && input){
+          btn.addEventListener('click', function(){
+            const isPwd = input.getAttribute('type') === 'password';
+            input.setAttribute('type', isPwd ? 'text' : 'password');
+            this.innerHTML = isPwd ? '<i class="fa fa-eye-slash"></i>' : '<i class="fa fa-eye"></i>';
+            this.setAttribute('aria-label', isPwd ? 'Hide password' : 'Show password');
+          });
+        }
+      })();
+    </script>
 </body>
 </html>
